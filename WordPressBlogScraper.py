@@ -55,13 +55,25 @@ for link in hrefList:
 
     contentContainer = str()
 
+    concatCounter = 0
+
     for section in div.find_all('p'):
 
         contentText = section.get_text()
 
         #print(contentText)
 
-        finalContainer = contentContainer + contentText
+        if concatCounter == 0:
+            
+            finalContainer = contentContainer + contentText
+
+            concatCounter += 1
+
+        elif concatCounter > 0:
+
+            finalContainer = finalContainer + "  " + contentText
+
+            concatCounter += 1
 
     contentList.append(finalContainer)
 
@@ -83,23 +95,7 @@ csv_file.close()
 
 print(contentText)
 
-##Test append
+print(len(contentList))
 
-oneLink = hrefList[3]
-
-print(oneLink)
-
-postLink = requests.get('https://josephzampitella.com/2020/10/16/more-beneficial-rain-on-the-way/').text
-postSoup = BeautifulSoup(postLink, 'lxml')
-
-div = postSoup.find(class_='entry-content')
-
-
-
-for section in div.find_all('p'):
-
-    contentText = section.get_text()
-
-    print(contentText)
-
-print('\n', contentText)
+for i in contentList:
+    print(i + '\n')
