@@ -24,13 +24,13 @@ for article in soupTwo.find_all('article'):
     headline = article.h2.a.text
     print(headline)
 
-# for paragraph in soupThree.find_all('article'):
-#     content = paragraph.p.a.text
-#     print(content)
+moreLink = soupTwo.find_all(class_='more-link')
 
-section = soupThree.findAll('div', attrs={"class":"entry-content"})
+for a in soupTwo.find_all('a', href=True, class_='more-link'):
+    if a.text:
+        print(a['href'])
 
-htmlParse = BeautifulSoup(testArticleOne, 'html.parser')
+#PULLS TEXT ONLY FROM PRIMARY CONTENT AREA (ARTICLE)
 
 div = soupThree.find(class_='entry-content')
 
