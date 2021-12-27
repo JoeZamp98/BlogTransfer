@@ -11,28 +11,47 @@ soupOne = BeautifulSoup(archivesOne, 'lxml')
 soupTwo = BeautifulSoup(archivesTwo, 'lxml')
 soupThree = BeautifulSoup(testArticleOne, 'lxml')
 
+#Opens 
+
 csv_file = open('wordpress_scraped.csv', 'w')
 
 csv_writer = csv.writer(csv_file)
 csv_writer.writerow(['headline', 'date', 'full_text'])
 
+#Retrieves headlines from posts
+
+articleTitles = []
+
 for article in soupOne.find_all('article'):
     headline = article.h2.a.text
-    print(headline)
+    #print(headline)
+    articleTitles.append(headline)
 
 for article in soupTwo.find_all('article'):
     headline = article.h2.a.text
-    print(headline)
+    #print(headline)
+    articleTitles.append(headline)
 
-moreLink = soupTwo.find_all(class_='more-link')
+#Retrieves body text from individual posts
+
+hrefList = []
+contentList =[]
 
 for a in soupTwo.find_all('a', href=True, class_='more-link'):
-    if a.text:
-        print(a['href'])
+     if a.text:
+         hrefList.append(a['href'])
 
-#PULLS TEXT ONLY FROM PRIMARY CONTENT AREA (ARTICLE)
+for link in hrefList:
 
-div = soupThree.find(class_='entry-content')
+    postLink = requests.get(link).text
+    postSoup = BeautifulSoup(postLink, 'lxml')
+    
+    div = postSoup.find(class_='entry-content')
 
-for article in div.find_all('p'):
-     print(article.get_text())
+    for section in div.find_all('p'):
+
+        contentText = section.get_text()
+
+        contentList.append(contentText)
+
+csv_file.close()
